@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
-import { SayHello } from '../../wailsjs/go/main/App';
+import { SayHello } from '../../wailsjs/go/sftp/SFTP';
 
 interface Credential {
   protocol: 'ftp' | 'sftp';

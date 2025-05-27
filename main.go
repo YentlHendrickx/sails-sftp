@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"embed"
+	"sails-sftp/backend/sftp"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -11,8 +14,8 @@ import (
 var assets embed.FS
 
 func main() {
-	// Create an instance of the app structure
 	app := NewApp()
+	app.SFTP = sftp.NewSFTP(context.Background()) // Initialize SFTP with a background context
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -24,8 +27,9 @@ func main() {
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
 		OnStartup:        app.startup,
-		Bind: []interface{}{
+		Bind: []any{
 			app,
+			app.SFTP,
 		},
 	})
 

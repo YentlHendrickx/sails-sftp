@@ -1,4 +1,4 @@
-// SFTP Wrapper for Go
+// SFTP Management Package - TODO: Should this be generalized into FTP and SFTP?
 package sftp
 
 import (
