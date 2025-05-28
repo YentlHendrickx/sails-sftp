@@ -2,20 +2,20 @@ package core
 
 import (
 	"context"
-	"sails-sftp/backend/sftp"
+	"sails-sftp/backend/protocols"
 	"sails-sftp/backend/utils/logging"
 )
 
 type App struct {
-	ctx    context.Context
-	SFTP   *sftp.SFTP // App will have a reference to SFTP -> this should be more modular (Connections?)
-	Logger *logging.Logger
+	ctx     context.Context
+	Logger  *logging.Logger
+	Manager *protocols.ConnectionManager
 }
 
 func NewApp(logger *logging.Logger) *App {
 	return &App{
-		SFTP:   sftp.NewSFTP(context.Background(), logger),
-		Logger: logger,
+		Logger:  logger,
+		Manager: protocols.NewManager(context.Background(), logger),
 	}
 }
 

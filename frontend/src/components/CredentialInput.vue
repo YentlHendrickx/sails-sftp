@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
-import { SayHello } from '../../wailsjs/go/sftp/SFTP';
+import { Connect } from '../../wailsjs/go/protocols/ConnectionManager';
 
 interface Credential {
   protocol: 'ftp' | 'sftp';
@@ -27,7 +27,7 @@ const submitForm = () => {
     position: 'top-right',
   });
 
-  SayHello("test");
+  Connect();
 };
 
 </script>

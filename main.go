@@ -17,9 +17,7 @@ func main() {
 	logger := logging.NewLogger(logging.LevelInfo, "logs/app.log")
 
 	logger.Log(logging.LevelInfo, "Starting Sails SFTP application...")
-
 	app := core.NewApp(logger)
-	// app.SFTP = sftp.NewSFTP(co() // Initialize SFTP with a background context
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -35,7 +33,7 @@ func main() {
 		},
 		Bind: []any{
 			app,
-			app.SFTP,
+			app.Manager,
 		},
 	})
 
