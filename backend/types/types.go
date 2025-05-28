@@ -1,8 +1,7 @@
-package protocols
+package types
 
 import (
 	"context"
-	"sails-sftp/backend/utils/logging"
 )
 
 type FileInfo struct {
@@ -20,6 +19,7 @@ type ConnectionConfig struct {
 	Port     int    `json:"port"`
 	Username string `json:"username"`
 	Password string `json:"password"` // TODO: should be handled securely
+	// TODO: UUID? should uuid be passed here or is the 'config' only gonna be used for the profile?
 }
 
 type ProtocolType string
@@ -32,16 +32,13 @@ const (
 	// ProtocolSSH ProtocolType = "ssh"
 )
 
-type ConnectionManager struct {
-	ctx         context.Context
-	Logger      *logging.Logger
-	Connections map[string]BaseClient // Use base client so we can have both file transfer + regular SSH in the future
-}
-
 type ConnectResult struct {
 	IsConnected bool
 	Type        ProtocolType
 	Data        any
+
+	// TODO: Implemen this back to frontend, store in pinia store so we can identify the connection
+	ConnectionUUID string // UUID of the connection, used to identify the connection in the manager
 }
 
 // BaseClient is a common interface for all protocol clients

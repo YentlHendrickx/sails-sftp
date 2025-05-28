@@ -1,9 +1,9 @@
 package sftp
 
 import (
-	"sails-sftp/backend/protocols"
+	"sails-sftp/backend/types"
 )
 
 type SFTPConfig struct {
-	protocols.ConnectionConfig
+	types.ConnectionConfig
 }

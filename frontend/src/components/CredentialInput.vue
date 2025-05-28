@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import { Connect } from '../../wailsjs/go/protocols/ConnectionManager';
+import { types } from '../../wailsjs/go/models';
 
 interface Credential {
   protocol: 'ftp' | 'sftp';
@@ -19,6 +20,9 @@ const credential = ref<Credential>({
   password: ''
 });
 
+const connectString = ref<string>('');
+const connectData = ref<string>('');
+
 const submitForm = () => {
   console.log('Submitted Credential:', credential.value);
   // Here you can handle the form submission, e.g., send the data to an API
@@ -27,12 +31,29 @@ const submitForm = () => {
     position: 'top-right',
   });
 
-  Connect();
+  Connect().then((result: types.ConnectResult) => {
+    console.log("CONNECTION TYPE", result.Type);
+    console.log("IS CONNECTED", result.IsConnected);
+    console.log("LIST DIR", result.Data);
+    connectString.value = `Connected to ${result.Type} at ${credential.value.host}:${credential.value.port}`;
+    connectData.value = result.Data;
+    toast.success(`Connected successfully! Type: ${result.Type}`, {
+      autoClose: 5000,
+      position: 'top-right',
+    });
+  }).catch((error: Error) => {
+    toast.error(`Error connecting: ${error.message}`, {
+      autoClose: 5000,
+      position: 'top-right',
+    });
+  });
 };
 
 </script>
 <template>
   <h1 class="text-white text-3xl text-center">Credential Input Component</h1>
+  <p>{{ connectString }}</p>
+  <p>{{ connectData }}</p>
   <!-- Form with: Select (FTP/SFTP), Host, Port, Username, Password -->
   <form class="max-w-md mx-auto mt-8 bg-white p-6 rounded-lg shadow-md" @submit.prevent="() => submitForm()">
     <div class="mb-4">

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	// "io"
 	// "os"
-	"sails-sftp/backend/protocols"
+	"sails-sftp/backend/types"
 	"sails-sftp/backend/utils/logging"
 
 	"github.com/pkg/sftp"
@@ -29,11 +29,11 @@ func NewSFTPClient(ctx context.Context, config SFTPConfig, logger *logging.Logge
 	}
 }
 
-func (c *Client) GetType() protocols.ProtocolType {
-	return protocols.ProtocolSFTP
+func (c *Client) GetType() types.ProtocolType {
+	return types.ProtocolSFTP
 }
 
-func (c *Client) GetConfig() protocols.ConnectionConfig {
+func (c *Client) GetConfig() types.ConnectionConfig {
 	return c.config.ConnectionConfig
 }
 
@@ -120,4 +120,31 @@ func (c *Client) Disconnect(ctx context.Context) error {
 
 	c.logger.Log(logging.LevelInfo, fmt.Sprintf("Successfully disconnected from SFTP server %s:%d", c.config.Host, c.config.Port))
 	return nil
+}
+
+func (c *Client) ListFiles(ctx context.Context, path string) ([]types.FileInfo, error) {
+	if !c.IsConnected() {
+		return nil, fmt.Errorf("not connected to SFTP server %s:%d", c.config.Host, c.config.Port)
+	}
+
+	c.logger.Log(logging.LevelInfo, fmt.Sprintf("Listing files in directory: %s", path))
+
+	files, err := c.sftpClient.ReadDir(path)
+	if err != nil {
+		c.logger.Log(logging.LevelError, fmt.Sprintf("Failed to list files in directory %s: %v", path, err))
+		return nil, fmt.Errorf("failed to list files in directory %s: %w", path, err)
+	}
+
+	fileInfos := make([]types.FileInfo, len(files))
+	for i, file := range files {
+		fileInfos[i] = types.FileInfo{
+			Name:  file.Name(),
+			Size:  file.Size(),
+			Mode:  file.Mode().String(),
+			Mtime: file.ModTime().Unix(),
+			IsDir: file.IsDir(),
+		}
+	}
+
+	return fileInfos, nil
 }
