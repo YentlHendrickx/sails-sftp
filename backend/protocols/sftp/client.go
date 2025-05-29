@@ -3,6 +3,7 @@ package sftp
 import (
 	"context"
 	"fmt"
+	"time"
 	// "io"
 	// "os"
 	"sails-sftp/backend/types"
@@ -55,7 +56,8 @@ func (c *Client) Connect(ctx context.Context) error {
 			ssh.Password(c.config.Password),
 			// TODO: Add support for public key authentication
 		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // TODO: Use a proper host key verification in production
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),    // TODO: Use a proper host key verification in production
+		Timeout:         time.Duration(5) * time.Second, // Set a timeout for the connection
 	}
 
 	addr := fmt.Sprintf("%s:%d", c.config.Host, c.config.Port)

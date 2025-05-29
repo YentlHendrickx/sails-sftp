@@ -1,5 +1,7 @@
 package logging
 
+// TODO: Look into using a proper logging library like logrus or zap
+
 import (
 	"fmt"
 	"sails-sftp/backend/utils/date"
