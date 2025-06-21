@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "types/*": ["./src/types/*"],
+      "@components/*": ["./src/components/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+    },
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -26,5 +34,5 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
 }

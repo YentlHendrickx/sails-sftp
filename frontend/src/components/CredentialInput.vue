@@ -5,9 +5,8 @@ import { toast } from 'vue3-toastify';
 // TODO: I should make some prefixes for the imports, like `go/` or `models/`
 import { Connect, Disconnect } from '../../wailsjs/go/protocols/ConnectionManager';
 import { types } from '../../wailsjs/go/models';
-import type { ProtocolType } from '../types/types';
-import { ProtocolTypes } from '../types/types';
-import type { SailsError } from '../types/types';
+import type { ProtocolType, SailsError } from 'types/types';
+import { ProtocolTypes } from 'types/types';
 
 const lastConnectResult = ref<types.ConnectResult>({} as types.ConnectResult);
 const selectedProtocol = ref<ProtocolType>('sftp');
