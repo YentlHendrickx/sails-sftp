@@ -7,9 +7,12 @@ import { Connect, Disconnect } from '../../wailsjs/go/protocols/ConnectionManage
 import { types } from '../../wailsjs/go/models';
 import type { ProtocolType, SailsError } from 'types/types';
 import { ProtocolTypes } from 'types/types';
+import { useConnectionStore } from '@/stores/connectionStore';
 
 const lastConnectResult = ref<types.ConnectResult>({} as types.ConnectResult);
 const selectedProtocol = ref<ProtocolType>('sftp');
+
+const connectionStore = useConnectionStore();
 const credentialInput = ref<types.ConnectionInput>({
   type: 'sftp',
   host: '',
@@ -34,6 +37,7 @@ const submitForm = () => {
     });
 
     lastConnectResult.value = result;
+
   }).catch((data: any) => {
     // TODO: Write a wrapper for calling Go methods
     const error = JSON.parse(data) as SailsError;
@@ -46,6 +50,12 @@ const submitForm = () => {
     lastConnectResult.value = {
       is_connected: false,
     } as types.ConnectResult;
+  }).finally(() => {
+    if (!lastConnectResult.value) {
+      return;
+    }
+
+    connectionStore.addNewConnection(lastConnectResult.value);
   });
 };
 
@@ -72,7 +82,6 @@ const disconnect = () => {
 };
 </script>
 <template>
-  <h1 class="text-white text-3xl text-center">sails SFTP</h1>
   <button @click="disconnect" class="mt-4 bg-red-500 text-white p-2 rounded hover:bg-red-600"
     v-if="lastConnectResult.is_connected">
     Disconnect
